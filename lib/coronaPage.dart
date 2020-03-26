@@ -59,14 +59,7 @@ class _CoronaViewState extends State<CoronaView> {
               backgroundColor: Color(0xfff2f3f4),
               middle: Text("CoronaVirus World Statistics"),
               largeTitle: Text("Countries"),
-              leading: IconButton(
-                  icon: Icon(
-                    CupertinoIcons.refresh_thick,
-                    color: CupertinoColors.activeBlue,
-                  ),
-                  onPressed: () {
-                    loadData();
-                  }),
+              
               trailing: IconButton(
                   icon: Icon(
                     CupertinoIcons.search,
