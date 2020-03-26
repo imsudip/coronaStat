@@ -24,7 +24,7 @@ class _CoronaViewState extends State<CoronaView> {
     worldStat = await getStat();
     max = int.parse(
             worldStat.countriesStat[0].cases.replaceAll(RegExp(r','), "")) +
-        10000;
+        22000;
 
     setState(() {
       currentStat = worldStat;

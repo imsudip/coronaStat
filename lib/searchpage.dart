@@ -30,7 +30,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    max = int.parse(widget.list[0].cases.replaceAll(RegExp(r','), "")) + 10000;
+    max = int.parse(widget.list[0].cases.replaceAll(RegExp(r','), "")) + 20000;
     super.initState();
   }
 
