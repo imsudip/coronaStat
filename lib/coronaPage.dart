@@ -17,14 +17,15 @@ WorldStat currentStat;
 class _CoronaViewState extends State<CoronaView> {
   bool isvisible = false;
   World world;
-  loadWorld()async{
-    world= await getWorldStat();
+  loadWorld() async {
+    world = await getWorldStat();
   }
+
   loadData() async {
     worldStat = await getStat();
-    max = int.parse(
-            worldStat.countriesStat[0].cases.replaceAll(RegExp(r','), "")) +
-        22000;
+    int max_int_val = int.parse(
+        worldStat.countriesStat[0].cases.replaceAll(RegExp(r','), ""));
+    max = max_int_val + (max_int_val * 0.4).floor();
 
     setState(() {
       currentStat = worldStat;
@@ -79,23 +80,27 @@ class _CoronaViewState extends State<CoronaView> {
                             )));
                   }),
             ),
-           world!=null? SliverToBoxAdapter(
-              child: ExpansionTile(
-                title: Text(
-                  "Last updated on",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text("  " + worldStat.statisticTakenAt,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300,color: Colors.blueGrey)
-                ),
-                children: <Widget>[
-                  description("Total cases", world.totalCases),
-                  description("Total Deaths", world.totalDeaths),
-                  description("Total Recovered", world.totalRecovered),
-
-                ],
-              ),
-            ):SliverToBoxAdapter(),
+            world != null
+                ? SliverToBoxAdapter(
+                    child: ExpansionTile(
+                      title: Text(
+                        "Last updated on",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text("  " + worldStat.statisticTakenAt,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.blueGrey)),
+                      children: <Widget>[
+                        description("Total cases", world.totalCases),
+                        description("Total Deaths", world.totalDeaths),
+                        description("Total Recovered", world.totalRecovered),
+                      ],
+                    ),
+                  )
+                : SliverToBoxAdapter(),
             currentStat != null
                 ? SliverList(
                     delegate: SliverChildBuilderDelegate(
@@ -154,9 +159,14 @@ class _CoronaViewState extends State<CoronaView> {
             ]))),
       );
   Widget listBar(int index, WorldStat worldStat) {
-    double wpercent = int.parse(
+    double affected = int.parse(
             worldStat.countriesStat[index].cases.replaceAll(RegExp(r','), "")) /
         max;
+    double recovered = worldStat.countriesStat[index].totalRecovered == "N/A"
+        ? 0
+        : int.parse(worldStat.countriesStat[index].totalRecovered
+                .replaceAll(RegExp(r','), "")) /
+            max;
     return ExpansionTile(
       backgroundColor: Color(0xfff2f3f4),
       title: Container(
@@ -171,9 +181,21 @@ class _CoronaViewState extends State<CoronaView> {
               top: 1,
               bottom: 1,
               child: Container(
-                width: MediaQuery.of(context).size.width * wpercent,
+                width: MediaQuery.of(context).size.width * affected,
                 decoration: BoxDecoration(
                     color: Colors.redAccent,
+                    borderRadius: BorderRadius.circular(7)),
+                // height: 30,
+              ),
+            ),
+            Positioned(
+              left: 2,
+              top: 1,
+              bottom: 1,
+              child: Container(
+                width: MediaQuery.of(context).size.width * recovered,
+                decoration: BoxDecoration(
+                    color: Colors.greenAccent,
                     borderRadius: BorderRadius.circular(7)),
                 // height: 30,
               ),
